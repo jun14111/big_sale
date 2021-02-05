@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>秒杀商品列表</title>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            list();
+        });
+
+        // 展示列表
+        function list() {
+            $.get("killGoods/list", {}, function (result) {
+                console.log("listing");
+                console.log(result); // 集合
+                $("#tb").html(" <tr>\n" +
+                    "               <td>商品名称</td>\n" +
+                    "               <td>图片</td>\n" +
+                    "               <td>原价</td>\n" +
+                    "               <td>秒杀价</td>\n" +
+                    "               <td>详情连接</td>\n" +
+                    "            </tr>");
+                $.each(result, function (i, e) {
+                    $("#tb").append(`    <tr>
+                                            <td>${e.goodsName}</td>
+                                            <td><img src="${e.goodsImg}" width="50px" height="50px" alt="img"></td>
+                                            <td>${e.goodsPrice}</td>
+                                            <td>${e.killprice}</td>
+                                            <td><a href="details.jsp?killid=${e.killid}&goodsid=${e.goodsid}">详情</a></td>
+                                        </tr>`)
+                });
+            }, "json");
+        }
+
+        function logout() {
+            DeleteCookie("username");
+            DeleteCookie("userid");
+        }
+
+        //删除Cookie
+        function DeleteCookie(name) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            document.cookie = name + "=" + "; path=/ ;expires=" + exp.toGMTString();
+        }
+
+    </script>
+</head>
+<body>
+<h1>秒杀商品列表</h1>
+
+<a href="login.jsp">登录</a>
+<input type="button" value="登出" onclick="logout()"><br>
+<a href="orderList.jsp">我的订单</a><br>
+
+<table id="tb" border="1px" width="600px"></table>
+
+</body>
+</html>
